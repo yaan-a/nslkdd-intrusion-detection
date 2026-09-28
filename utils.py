@@ -12,4 +12,4 @@ def to_binary_label(class_name):
     rule export_model.py applies to the "class" column:
     ``class.str.lower() != "normal"``.
     """
-    return 1 if class_name.lower() == "normal" else 0
+    return 0 if class_name.lower() == "normal" else 1
