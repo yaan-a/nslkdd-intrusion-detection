@@ -5,7 +5,13 @@ import joblib
 import pandas as pd
 import streamlit as st
 
-MODEL_PATH = Path("model/nslkdd_model.pkl")
+PROJECT_ROOT = Path(__file__).resolve().parent
+MODEL_OPTIONS = {
+    "Official protocol model": PROJECT_ROOT / "model" / "nslkdd_model.pkl",
+    "Paper protocol model": PROJECT_ROOT / "model" / "nslkdd_stacking_proposed.pkl",
+}
+MERGED_DATA_PATH = PROJECT_ROOT / "data" / "NSL-KDD_merged.csv"
+PAPER_METRICS_PATH = PROJECT_ROOT / "results" / "metrics_paper.csv"
 
 FEATURE_GLOSSARY = {
     "duration": "connection duration in seconds",
@@ -50,22 +56,82 @@ FEATURE_GLOSSARY = {
 }
 
 
+def load_paper_metrics():
+    if not PAPER_METRICS_PATH.exists():
+        return None
+    rows = pd.read_csv(PAPER_METRICS_PATH)
+    row = rows.loc[rows["model"] == "Stacking (proposed)"]
+    if row.empty:
+        return None
+    values = row.iloc[0]
+    return {
+        "accuracy": float(values["accuracy"]),
+        "precision": float(values["precision"]),
+        "recall": float(values["recall"]),
+        "f1": float(values["f1"]),
+        "auc": float(values["auc"]),
+        "confusion_matrix": {
+            "tn": int(values["tn"]),
+            "fp": int(values["fp"]),
+            "fn": int(values["fn"]),
+            "tp": int(values["tp"]),
+        },
+    }
+
+
+def add_paper_bundle_metadata(bundle):
+    bundle = dict(bundle)
+    bundle["encoders"] = bundle.pop("categorical_encoders")
+    bundle["protocol"] = "paper"
+    bundle["metrics"] = load_paper_metrics()
+
+    if MERGED_DATA_PATH.exists():
+        data = pd.read_csv(MERGED_DATA_PATH)
+        numeric_defaults = {}
+        numeric_bounds = {}
+        for feature in bundle["kept_features"]:
+            if feature in bundle["categorical_columns"]:
+                continue
+            values = data[feature].astype(float)
+            numeric_defaults[feature] = float(values.median())
+            numeric_bounds[feature] = {
+                "min": float(values.quantile(0.01)),
+                "max": float(values.quantile(0.99)),
+            }
+        bundle["numeric_defaults"] = numeric_defaults
+        bundle["numeric_bounds"] = numeric_bounds
+    else:
+        bundle["numeric_defaults"] = {}
+        bundle["numeric_bounds"] = {}
+    return bundle
+
+
 @st.cache_resource
-def load_bundle():
-    if not MODEL_PATH.exists():
+def load_bundle(model_path):
+    model_path = Path(model_path)
+    if not model_path.exists():
         raise FileNotFoundError(
-            f"Missing {MODEL_PATH}. Run export_model.py before starting Streamlit."
+            f"Missing {model_path}. Create the model bundle before starting Streamlit."
         )
-    return joblib.load(MODEL_PATH)
+    bundle = joblib.load(model_path)
+    if "categorical_encoders" in bundle:
+        return add_paper_bundle_metadata(bundle)
+    return bundle
 
 
 def display_model_info(bundle):
-    metrics = bundle["metrics"]
+    metrics = bundle.get("metrics")
+    if metrics is None:
+        st.info("Evaluation metrics are not available for this model bundle.")
+        return
     matrix = metrics["confusion_matrix"]
     with st.expander("Model info", expanded=True):
         st.caption(
             "Official-protocol evaluation: trained on KDDTrain+.csv and evaluated "
             "on KDDTest+.csv, including attack types not seen during training."
+            if bundle.get("protocol") == "official" else
+            "Paper-protocol evaluation: the merged NSL-KDD data was randomly split "
+            "into training and test partitions."
         )
         st.metric("Accuracy", f"{metrics['accuracy']:.2f}%")
         columns = st.columns(4)
@@ -108,10 +174,11 @@ def randomize_inputs(bundle):
 def main():
     st.set_page_config(page_title="NSL-KDD Detector", page_icon="🛡️", layout="wide")
     st.title("NSL-KDD Intrusion Detector")
-    st.write("Classify one network connection with the proposed stacking model.")
+    selected_model = st.selectbox("Model", list(MODEL_OPTIONS))
+    st.write("Classify one network connection with the selected stacking model.")
 
     try:
-        bundle = load_bundle()
+        bundle = load_bundle(str(MODEL_OPTIONS[selected_model]))
     except Exception as error:
         st.error(str(error))
         st.stop()
