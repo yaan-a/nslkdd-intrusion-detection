@@ -1,0 +1,30 @@
+# Python cache
+__pycache__/
+*.py[cod]
+
+# Virtual environments
+.venv/
+venv/
+env/
+
+# Secrets and local settings
+.env
+*.token
+secrets.json
+.streamlit/secrets.toml
+
+# Editor and operating-system files
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# Temporary notebook checkpoints
+.ipynb_checkpoints/
+
+# Temporary logs
+*.log
+
+# Large generated model from replicate_nslkdd.py --save-pkl
+# (model/nslkdd_model.pkl is intentionally NOT ignored: the Streamlit app needs it)
+results/*.pkl
