@@ -1,0 +1,8 @@
+level,group,n_attack_types,n_records,n_detected,n_missed,recall
+overall,all attacks,37,12833,8232,4601,0.6415
+family,DoS,11,7460,6108,1352,0.8188
+family,Probe,6,2421,1983,438,0.8191
+family,R2L,13,2885,132,2753,0.0458
+family,U2R,7,67,9,58,0.1343
+in_train,True,20,9083,6920,2163,0.7619
+in_train,False,17,3750,1312,2438,0.3499
