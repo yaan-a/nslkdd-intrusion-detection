@@ -1,0 +1,26 @@
+NSL-KDD Lab 3 environment
+Recorded: 2026-10-18
+
+Operating system: Windows 10/11 x64
+Python: 3.12.6
+scikit-learn: 1.9.1
+pandas: 2.3.3
+numpy: 1.26.4
+joblib: 1.6.0
+Flask: installed from backend/requirements.txt
+pytest: installed from backend/requirements.txt
+Node.js: 22.23.1
+npm: 10.9.8
+Angular CLI: 22.2.3 (local development dependency)
+
+Backend start:
+  .venv\Scripts\python.exe backend\app.py
+
+Frontend install and start:
+  cd frontend
+  npm ci
+  npx ng serve --proxy-config proxy.conf.json
+
+Frontend production build:
+  cd frontend
+  npm run build
