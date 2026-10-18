@@ -1,0 +1,11 @@
+# Backend dependencies for the API and its tests (hand-written, not `pip freeze`).
+# scikit-learn must match the version the model was saved with (1.9.1).
+# After the tests pass on your machine, replace the >= lines with the exact
+# versions from `pip list` so CI installs the same ones.
+scikit-learn==1.9.1
+pandas>=2.2
+numpy>=1.26
+joblib>=1.3
+flask>=3.0
+pytest>=8.0
+requests>=2.31

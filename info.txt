@@ -1,0 +1,17 @@
+Paper: Machine learning-based intrusion detection framework using NSL-KDD dataset — Discover Artificial Intelligence (Springer Nature, fully open-access journal), 2026.
+https://link.springer.com/article/10.1007/s44163-026-01930-9
+
+Dataset: NSL-KDD — freely downloadable, two common sources:
+
+Kaggle: https://www.kaggle.com/datasets/hassan06/nslkdd
+Original UNB source: https://www.unb.ca/cic/datasets/nsl.html
+
+Quick recap of why it fits your constraints:
+
+Open access: yes, Discover AI is a Springer Nature OA journal, CC BY.
+2023+: yes, 2026.
+Multiple models + performance table: Logistic Regression, KNN, Naive Bayes, Decision Tree, Random Forest, SVM (with GridSearchCV tuning), reported with accuracy, precision, recall, F1.
+Dataset size: 148,517 total records (125,973 train + 22,544 test) — comfortably inside your 100k–1M range.
+Features: 41 features + 1 label column — clears your 35+ requirement.
+Downloadable CSV: yes, both sources above are direct downloads, no application/credentialing needed.
+Topic: network intrusion/cybersecurity — not diabetes.
