@@ -7,6 +7,12 @@ __pycache__/
 venv/
 env/
 
+# Node and Angular dependencies/build output
+node_modules/
+frontend/node_modules/
+frontend/dist/
+frontend/.angular/
+
 # Secrets and local settings
 .env
 *.token

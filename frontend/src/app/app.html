@@ -1,0 +1,127 @@
+<main class="shell">
+  <header class="hero">
+    <div>
+      <p class="eyebrow">NSL-KDD / LOCAL RESEARCH TOOL</p>
+      <h1>Intrusion detector</h1>
+      <p class="lede">Enter one network connection and inspect the binary model prediction.</p>
+    </div>
+    <div class="protocol">Official protocol<br /><strong>34 inputs</strong></div>
+  </header>
+
+  @if (loading) {
+    <section class="panel loading">Loading the model schema...</section>
+  } @else if (error && !schema) {
+    <section class="alert error" role="alert">{{ error }}</section>
+  } @else if (schema) {
+    <section class="toolbar panel">
+      <div>
+        <span class="section-kicker">Start with a known record</span>
+        <p>These examples come from the public NSL-KDD test data.</p>
+      </div>
+      <div class="actions">
+        <button type="button" class="button secondary" (click)="loadExample('normal')">
+          Load normal
+        </button>
+        <button type="button" class="button dark" (click)="loadExample('attack')">
+          Load detected attack
+        </button>
+      </div>
+    </section>
+
+    @if (error) {
+      <section class="alert error" role="alert">{{ error }}</section>
+    }
+
+    <form class="workspace" (ngSubmit)="submit()">
+      <div class="form-column">
+        @for (group of schema.groups; track group) {
+          <section class="panel feature-group">
+            <div class="group-heading">
+              <div>
+                <span class="section-kicker">{{ group }}</span>
+                <h2>{{ groupedFeatures(group).length }} features</h2>
+              </div>
+              <span class="group-index">{{ $index + 1 | number: '2.0' }}</span>
+            </div>
+
+            <div class="field-grid">
+              @for (feature of groupedFeatures(group); track trackFeature($index, feature)) {
+                <label class="field" [class.wide]="feature.name === 'service'">
+                  <span class="field-label">{{ feature.label }}</span>
+                  <span class="field-help">{{ feature.description }}</span>
+
+                  @if (feature.name === 'service') {
+                    <input
+                      type="search"
+                      placeholder="Filter services"
+                      [(ngModel)]="serviceSearch"
+                      name="service-search"
+                      class="service-filter"
+                    />
+                  }
+
+                  @if (feature.kind === 'category') {
+                    <select [(ngModel)]="values[feature.name]" [name]="feature.name">
+                      @for (option of serviceOptions(feature); track option) {
+                        <option [value]="option">{{ option }}</option>
+                      }
+                    </select>
+                  } @else {
+                    <input
+                      type="number"
+                      [(ngModel)]="values[feature.name]"
+                      [name]="feature.name"
+                      [attr.min]="feature.min_allowed ?? null"
+                      [attr.max]="feature.max_allowed ?? null"
+                      [step]="feature.integer ? 1 : 'any'"
+                    />
+                  }
+                </label>
+              }
+            </div>
+          </section>
+        }
+      </div>
+
+      <aside class="side-column">
+        <section class="panel submit-panel">
+          <span class="section-kicker">Ready to evaluate?</span>
+          <h2>Run local prediction</h2>
+          <p>
+            The request is sent to your local Flask API. GitHub Pages cannot run the Python model.
+          </p>
+          <button class="button primary" type="submit" [disabled]="submitting">
+            {{ submitting ? 'Evaluating...' : 'Classify connection' }}
+          </button>
+        </section>
+
+        @if (result) {
+          <section
+            class="result panel"
+            [class.attack]="result.label === 1"
+            [class.normal]="result.label === 0"
+          >
+            <span class="section-kicker">Prediction result</span>
+            <h2>{{ result.prediction === 'attack' ? 'Likely attack' : 'Likely normal' }}</h2>
+            <p class="probability">{{ result.probabilities[1] * 100 | number: '1.1-1' }}%</p>
+            <p>Attack probability at a decision threshold of {{ result.threshold }}.</p>
+            @if (result.warnings.length) {
+              <div class="warnings">
+                <strong>Outside training range</strong>
+                <p>{{ result.warnings.join(' ') }}</p>
+              </div>
+            }
+          </section>
+        }
+
+        <section class="note">
+          <strong>Interpretation</strong>
+          <p>
+            This is a research and teaching prototype. A prediction is not proof of an incident and
+            should be reviewed with other evidence.
+          </p>
+        </section>
+      </aside>
+    </form>
+  }
+</main>
