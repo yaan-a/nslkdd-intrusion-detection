@@ -35,9 +35,9 @@ stored in `data/`:
 
 Two evaluation protocols are supported:
 
-| Protocol | Command | Description |
-|---|---|---|
-| Paper protocol | `replicate_nslkdd.py --merged-csv ...` | Merged data, random 80:20 split, as in the paper |
+| Protocol          | Command                                                           | Description                                                                         |
+| ----------------- | ----------------------------------------------------------------- | ----------------------------------------------------------------------------------- |
+| Paper protocol    | `replicate_nslkdd.py --merged-csv ...`                            | Merged data, random 80:20 split, as in the paper                                    |
 | Official protocol | `export_model.py` or `replicate_nslkdd.py --train ... --test ...` | Train on `KDDTrain+`, test on `KDDTest+` (contains attack types unseen in training) |
 
 ## Algorithms
@@ -202,9 +202,9 @@ deactivate
 Stacking model, from `model/metrics.json` (22,544 test records: 9,711 normal and
 12,833 attacks):
 
-| Accuracy | Precision | Recall | F1 | ROC-AUC |
-|---|---|---|---|---|
-| 78.35% | 96.72% | 64.15% | 77.14% | 0.9742 |
+| Accuracy | Precision | Recall | F1     | ROC-AUC |
+| -------- | --------- | ------ | ------ | ------- |
+| 78.35%   | 96.72%    | 64.15% | 77.14% | 0.9742  |
 
 Confusion matrix: TN = 9,432, FP = 279, FN = 4,601, TP = 8,232.
 
@@ -220,38 +220,38 @@ which 17 do not appear in `KDDTrain+`. Overall recall is 64.15%. Full results:
 
 By attack family and by whether the attack type appears in `KDDTrain+`:
 
-| Group | Attack types | Records | Recall | Missed |
-|---|---|---|---|---|
-| DoS | 11 | 7,460 | 81.9% | 1,352 |
-| Probe | 6 | 2,421 | 81.9% | 438 |
-| R2L | 13 | 2,885 | 4.6% | 2,753 |
-| U2R | 7 | 67 | 13.4% | 58 |
-| Types seen in training | 20 | 9,083 | 76.2% | 2,163 |
-| Types not in training | 17 | 3,750 | 35.0% | 2,438 |
+| Group                  | Attack types | Records | Recall | Missed |
+| ---------------------- | ------------ | ------- | ------ | ------ |
+| DoS                    | 11           | 7,460   | 81.9%  | 1,352  |
+| Probe                  | 6            | 2,421   | 81.9%  | 438    |
+| R2L                    | 13           | 2,885   | 4.6%   | 2,753  |
+| U2R                    | 7            | 67      | 13.4%  | 58     |
+| Types seen in training | 20           | 9,083   | 76.2%  | 2,163  |
+| Types not in training  | 17           | 3,750   | 35.0%  | 2,438  |
 
 Family and seen/unseen combined:
 
 | Family | Seen in training: records, recall | Not in training: records, recall |
-|---|---|---|
-| DoS | 5,741, 99.8% | 1,719, 22.1% |
-| Probe | 1,106, 100.0% | 1,315, 66.7% |
-| R2L | 2,199, 3.7% | 686, 7.3% |
-| U2R | 37, 10.8% | 30, 16.7% |
+| ------ | --------------------------------- | -------------------------------- |
+| DoS    | 5,741, 99.8%                      | 1,719, 22.1%                     |
+| Probe  | 1,106, 100.0%                     | 1,315, 66.7%                     |
+| R2L    | 2,199, 3.7%                       | 686, 7.3%                        |
+| U2R    | 37, 10.8%                         | 30, 16.7%                        |
 
 The ten attack types with the most missed records:
 
-| Attack type | Family | In `KDDTrain+` | Records | Detected | Recall |
-|---|---|---|---|---|---|
-| guess_passwd | R2L | yes | 1,231 | 1 | 0.1% |
-| warezmaster | R2L | yes | 944 | 77 | 8.2% |
-| processtable | DoS | no | 685 | 105 | 15.3% |
-| apache2 | DoS | no | 737 | 273 | 37.0% |
-| mscan | Probe | no | 996 | 562 | 56.4% |
-| snmpguess | R2L | no | 331 | 0 | 0.0% |
-| mailbomb | DoS | no | 293 | 0 | 0.0% |
-| snmpgetattack | R2L | no | 178 | 0 | 0.0% |
-| httptunnel | R2L | no | 133 | 46 | 34.6% |
-| buffer_overflow | U2R | yes | 20 | 3 | 15.0% |
+| Attack type     | Family | In `KDDTrain+` | Records | Detected | Recall |
+| --------------- | ------ | -------------- | ------- | -------- | ------ |
+| guess_passwd    | R2L    | yes            | 1,231   | 1        | 0.1%   |
+| warezmaster     | R2L    | yes            | 944     | 77       | 8.2%   |
+| processtable    | DoS    | no             | 685     | 105      | 15.3%  |
+| apache2         | DoS    | no             | 737     | 273      | 37.0%  |
+| mscan           | Probe  | no             | 996     | 562      | 56.4%  |
+| snmpguess       | R2L    | no             | 331     | 0        | 0.0%   |
+| mailbomb        | DoS    | no             | 293     | 0        | 0.0%   |
+| snmpgetattack   | R2L    | no             | 178     | 0        | 0.0%   |
+| httptunnel      | R2L    | no             | 133     | 46       | 34.6%  |
+| buffer_overflow | U2R    | yes            | 20      | 3        | 15.0%  |
 
 Observations (descriptive; causes have not been investigated):
 
@@ -274,17 +274,16 @@ model only, not the paper's Random Forest or SVM models.
 
 Produced by `replicate_nslkdd.py --merged-csv data\NSL-KDD_merged.csv` on the
 merged file (148,517 rows). Random 80:20 split: 118,813 training and 29,704
-test records (48.1% attacks in both). VIF filtering dropped 8 features, leaving
-32.
+test records (48.1% attacks in both). VIF filtering dropped 8 features, leaving 32.
 
-| Model | Accuracy | Precision | Recall | F1 | ROC-AUC | 5-fold CV acc. | Paper accuracy |
-|---|---|---|---|---|---|---|---|
-| Logistic Regression | 92.69 | 93.50 | 91.14 | 92.31 | 0.9756 | 92.54 ± 0.47 | 96.72 |
-| K-NN | 98.72 | 98.86 | 98.49 | 98.67 | 0.9965 | 97.64 ± 0.06 | >99 |
-| Naive Bayes | 91.89 | 95.40 | 87.36 | 91.21 | 0.9786 | 91.87 ± 0.31 | 89.71 |
-| Decision Tree | 99.43 | 99.37 | 99.45 | 99.41 | 0.9945 | 98.98 ± 0.19 | ~97 |
-| Random Forest | 99.59 | 99.73 | 99.41 | 99.57 | 0.9999 | 99.30 ± 0.08 | 99.87 |
-| Stacking (proposed) | 99.59 | 99.70 | 99.44 | 99.57 | 0.9999 | 99.33 ± 0.11 | not in paper |
+| Model               | Accuracy | Precision | Recall | F1    | ROC-AUC | 5-fold CV acc. | Paper accuracy |
+| ------------------- | -------- | --------- | ------ | ----- | ------- | -------------- | -------------- |
+| Logistic Regression | 92.69    | 93.50     | 91.14  | 92.31 | 0.9756  | 92.54 ± 0.47   | 96.72          |
+| K-NN                | 98.72    | 98.86     | 98.49  | 98.67 | 0.9965  | 97.64 ± 0.06   | >99            |
+| Naive Bayes         | 91.89    | 95.40     | 87.36  | 91.21 | 0.9786  | 91.87 ± 0.31   | 89.71          |
+| Decision Tree       | 99.43    | 99.37     | 99.45  | 99.41 | 0.9945  | 98.98 ± 0.19   | ~97            |
+| Random Forest       | 99.59    | 99.73     | 99.41  | 99.57 | 0.9999  | 99.30 ± 0.08   | 99.87          |
+| Stacking (proposed) | 99.59    | 99.70     | 99.44  | 99.57 | 0.9999  | 99.33 ± 0.11   | not in paper   |
 
 The stacking model matches, but does not exceed, Random Forest on this split.
 "Paper accuracy" is the value reported in the paper (some are given only
@@ -306,13 +305,61 @@ U2R attacks and in attack types absent from training, but they describe one
 model on one test set. Evaluating all models under one protocol with identical
 features is tracked in issue #3.
 
+## Lab 3 full-stack application
+
+The repository also packages the official binary stacking model as a local
+Flask API and Angular interface. The API accepts the 34 model inputs, repeats
+the saved categorical encoding and scaling steps, and returns `normal` or
+`attack` with probabilities. It is a research and teaching prototype, not a
+production intrusion detection service.
+
+### Run locally
+
+Start the backend from the repository root:
+
+```powershell
+.venv\Scripts\python.exe backend\app.py
+```
+
+In a second terminal, install and start Angular:
+
+```powershell
+cd frontend
+npm ci
+npx ng serve --proxy-config proxy.conf.json
+```
+
+Open <http://127.0.0.1:4200>. The Angular development proxy forwards `/api`
+requests to the Flask server at `http://127.0.0.1:5000`.
+
+Useful local checks:
+
+```powershell
+python -m pytest -q backend\tests
+python backend\smoke_pipeline.py
+python backend\smoke_api.py
+cd frontend
+npm run build
+```
+
+The API exposes `GET /health`, `GET /schema`, and `POST /predict`. The frontend
+uses the generated schema and public sample records in `backend/` and
+`frontend/public/assets/` so the form and API share the same input contract.
+
+### CI and GitHub Pages
+
+`.github/workflows/ci.yml` runs the backend tests and Angular production build.
+`.github/workflows/pages.yml` deploys the Angular build to GitHub Pages.
+GitHub Pages hosts only the static Angular interface; it cannot run the Python
+Flask API or load the model. Live predictions require both local servers to be
+running.
+
 ## Automated checks
 
-`.github/workflows/python-test.yml` runs `python -m unittest discover -s tests -v`
-on pushes to `main` and on pull requests into `main`. The tests cover only the
-label helper in `utils.py` (`normal`, in any capitalization, maps to 0 and any
-attack name maps to 1). A passing check does not validate the datasets, the
-training pipeline or model performance.
+`.github/workflows/python-test.yml` runs the original Lab 2 unit tests.
+`.github/workflows/ci.yml` runs the Lab 3 backend tests and Angular production
+build. A passing check does not validate the training pipeline or model
+performance beyond the saved-model inference checks.
 
 ## Limitations
 
