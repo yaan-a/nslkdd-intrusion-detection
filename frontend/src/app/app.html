@@ -28,6 +28,12 @@
       </div>
     </section>
 
+    @if (deployedStatic) {
+      <section class="alert notice" role="status">
+        GitHub Pages hosts the Angular interface only. Start the local Flask API and Angular development server to run live predictions.
+      </section>
+    }
+
     @if (error) {
       <section class="alert error" role="alert">{{ error }}</section>
     }
@@ -90,8 +96,8 @@
           <p>
             The request is sent to your local Flask API. GitHub Pages cannot run the Python model.
           </p>
-          <button class="button primary" type="submit" [disabled]="submitting">
-            {{ submitting ? 'Evaluating...' : 'Classify connection' }}
+          <button class="button primary" type="submit" [disabled]="submitting || deployedStatic">
+            {{ deployedStatic ? 'Local API required' : (submitting ? 'Evaluating...' : 'Classify connection') }}
           </button>
         </section>
 

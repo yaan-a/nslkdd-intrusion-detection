@@ -117,6 +117,7 @@ input:focus, select:focus { border-color: var(--teal); outline: 3px solid rgba(8
 .note p { font-size: 0.84rem; margin: 8px 0 0; }
 .alert { border-radius: 5px; margin-bottom: 24px; padding: 14px 18px; }
 .error { background: #fff0ec; border: 1px solid #e9b3a4; color: #8e321d; }
+.notice { background: #e9f1ee; border: 1px solid #b8d1c9; color: var(--teal-dark); }
 .loading { color: var(--muted); padding: 24px; }
 
 @media (max-width: 900px) {
