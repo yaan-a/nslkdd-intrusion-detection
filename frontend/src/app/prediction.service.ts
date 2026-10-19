@@ -39,9 +39,13 @@ export interface PredictionResponse {
 export class PredictionService {
   private readonly http = inject(HttpClient);
 
+  private assetUrl(filename: string) {
+    return new URL(`assets/${filename}`, document.baseURI).toString();
+  }
+
   loadSchema(): Observable<Schema> {
     return new Observable(subscriber => {
-      fetch('/assets/schema.json')
+      fetch(this.assetUrl('schema.json'))
         .then(response => {
           if (!response.ok) {
             throw new Error(`Schema request failed (${response.status})`);
@@ -62,8 +66,8 @@ export class PredictionService {
   loadExamples(): Observable<Record<string, Record<string, string | number>>> {
     return new Observable(subscriber => {
       Promise.all([
-        fetch('/assets/test_payload_normal.json').then(response => response.json()),
-        fetch('/assets/test_payload.json').then(response => response.json()),
+        fetch(this.assetUrl('test_payload_normal.json')).then(response => response.json()),
+        fetch(this.assetUrl('test_payload.json')).then(response => response.json()),
       ]).then(([normal, attack]) => {
         subscriber.next({ normal, attack });
         subscriber.complete();
