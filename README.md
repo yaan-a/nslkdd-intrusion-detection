@@ -349,7 +349,8 @@ uses the generated schema and public sample records in `backend/` and
 ### CI and GitHub Pages
 
 `.github/workflows/ci.yml` runs the backend tests and Angular production build.
-`.github/workflows/pages.yml` deploys the Angular build to GitHub Pages.
+`.github/workflows/pages.yml` deploys the Angular browser build from
+`frontend/dist/frontend/browser` to GitHub Pages.
 GitHub Pages hosts only the static Angular interface; it cannot run the Python
 Flask API or load the model. Live predictions require both local servers to be
 running.
