@@ -21,6 +21,7 @@ export class App {
   submitting = false;
   error = '';
   result: PredictionResponse | null = null;
+  readonly deployedStatic = !['localhost', '127.0.0.1'].includes(window.location.hostname);
 
   constructor() {
     this.predictionService.loadSchema().subscribe({
@@ -81,6 +82,10 @@ export class App {
 
   submit() {
     if (!this.schema || this.submitting) return;
+    if (this.deployedStatic) {
+      this.error = 'Static GitHub Pages demo: start Flask and Angular locally to run predictions.';
+      return;
+    }
     this.error = '';
     this.result = null;
     const payload: Record<string, string | number> = {};
